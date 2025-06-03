@@ -121,6 +121,9 @@ const LayoutBase = props => {
                 : '') +
               ' w-full mx-auto lg:flex lg:space-x-4 justify-center relative z-10'
             }>
+            {/* 右侧栏 */}
+            <SideRight {...props} />
+
             <div
               className={`${className || ''} w-full ${fullWidth ? '' : 'max-w-4xl'} h-full overflow-hidden`}>
               <Transition
@@ -139,9 +142,6 @@ const LayoutBase = props => {
                 {children}
               </Transition>
             </div>
-
-            {/* 右侧栏 */}
-            <SideRight {...props} />
           </div>
         </main>
 
@@ -300,11 +300,11 @@ const LayoutSlug = props => {
               </section>
 
               {/* 分享 */}
-              <ShareBar post={post} />
+              {/* <ShareBar post={post} /> */}
               {post?.type === 'Post' && (
                 <>
-                  <ArticleCopyright {...props} />
-                  <ArticleRecommend {...props} />
+                  {/* <ArticleCopyright {...props} /> */}
+                  {/* <ArticleRecommend {...props} /> */}
                   <ArticleAdjacent {...props} />
                 </>
               )}
