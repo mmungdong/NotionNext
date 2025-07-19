@@ -234,6 +234,13 @@ const LayoutArchive = props => {
     <div className='pt-8'>
       <Card className='w-full bg-white rounded-xl shadow-sm border border-gray-100'>
         <div className='mb-10 pb-20 md:p-12 p-3 min-h-full dark:bg-gray-900'>
+
+          {/* 归档标识 - 带图标和文字 */}
+          <div className="flex items-center mb-6 text-[#2D4B53] dark:text-[#B3E0E6]">
+            <i className="fas fa-archive text-2xl mr-3" />
+            <h2 className="text-xl font-semibold">归档</h2>
+          </div>
+
           {Object.keys(archivePosts).map(archiveTitle => (
             <BlogPostArchive
               key={archiveTitle}
@@ -360,9 +367,9 @@ const LayoutCategoryIndex = props => {
   return (
     <div className='mt-8'>
       <Card className='w-full bg-white border border-gray-100 shadow-sm'>
-        <div className='dark:text-gray-200 mb-5 ml-4 flex flex items-center'>
+        <div className="flex items-center mb-6 text-[#2D4B53] dark:text-[#B3E0E6]">
           <i className='mr-4 fas fa-th text-[#B3E0E6]' /> {/* 图标样式保持一致 */}
-          <span className="font-bold text-gray-800 dark:text-gray-100">{locale.COMMON.CATEGORY}</span>
+          <h2 className="text-xl font-semibold">{locale.COMMON.CATEGORY}</h2>
         </div>
         <div id='category-list' className='duration-200 flex flex-wrap ml-8 gap-2.5 p-2'>
           {categoryOptions?.map(category => (
@@ -403,9 +410,9 @@ const LayoutTagIndex = props => {
   return (
     <div className='mt-8'>
       <Card className='w-full bg-white border border border-gray-100 shadow-sm'>
-        <div className='dark:text-gray-200 mb-5 ml-4 flex items-center'>
+        <div className="flex items-center mb-6 text-[#2D4B53] dark:text-[#B3E0E6]">
           <i className='mr-4 fas fa-tag text-[#B3E0E6]' /> {/* 图标样式 */}
-          <span className="font-bold text-gray-800 dark:text-gray-100">{locale.COMMON.TAGS}</span>
+           <h2 className="text-xl font-semibold">{locale.COMMON.TAGS}</h2>
         </div>
         <div id='tags-list' className='duration-200 flex flex-wrap ml-8 gap-2.5 p-2'>
           {tagOptions.map(tag => (
