@@ -2,17 +2,17 @@ import { useGlobal } from '@/lib/global'
 import throttle from 'lodash.throttle'
 import { uuidToId } from 'notion-utils'
 import { useCallback, useEffect, useRef, useState } from 'react'
-import Progress from './Progress'
 
 /**
- * 目录导航组件
- * @param toc
- * @returns {JSX.Element}
- * @constructor
+ * 目录导航组件（移除进度条，优化样式）
  */
 const Catalog = ({ toc }) => {
   const { locale } = useGlobal()
-  // 监听滚动事件
+  const [activeSection, setActiveSection] = useState(null)
+  const tRef = useRef(null)
+  const tocIds = []
+
+  // 滚动监听逻辑（保持原有功能）
   useEffect(() => {
     window.addEventListener('scroll', actionSectionScrollSpy)
     actionSectionScrollSpy()
@@ -20,13 +20,6 @@ const Catalog = ({ toc }) => {
       window.removeEventListener('scroll', actionSectionScrollSpy)
     }
   }, [])
-
-  // 目录自动滚动
-  const tRef = useRef(null)
-  const tocIds = []
-
-  // 同步选中目录事件
-  const [activeSection, setActiveSection] = useState(null)
 
   const throttleMs = 200
   const actionSectionScrollSpy = useCallback(
@@ -43,13 +36,11 @@ const Catalog = ({ toc }) => {
         const bbox = section.getBoundingClientRect()
         const prevHeight = prevBBox ? bbox.top - prevBBox.bottom : 0
         const offset = Math.max(150, prevHeight / 4)
-        // GetBoundingClientRect returns values relative to viewport
         if (bbox.top - offset < 0) {
           currentSectionId = section.getAttribute('data-id')
           prevBBox = bbox
           continue
         }
-        // No need to continue loop, if last element has been detected
         break
       }
       setActiveSection(currentSectionId)
@@ -58,39 +49,45 @@ const Catalog = ({ toc }) => {
     }, throttleMs)
   )
 
-  // 无目录就直接返回空
   if (!toc || toc.length < 1) {
     return <></>
   }
 
   return (
-    <div className='px-3 py-1'>
-      <div className='w-full'>
-        <i className='mr-1 fas fa-stream' />
-        {locale.COMMON.TABLE_OF_CONTENTS}
+    <div className="px-3 py-4 bg-white rounded-xl border border-[#B3E0E6]/20 shadow-sm">
+      {/* 目录标题 */}
+      <div className="w-full mb-4 flex items-center text-[#2D4B53] pb-2 border-b border-[#B3E0E6]/10">
+        <i className="mr-2 fas fa-stream text-[#B3E0E6]" />
+        <span className="font-medium">{locale.COMMON.TABLE_OF_CONTENTS}</span>
       </div>
-      <div className='w-full py-3'>
-        <Progress />
-      </div>
+
+      {/* 目录列表（增加内部间距，优化滚动体验） */}
       <div
-        className='overflow-y-auto max-h-36 lg:max-h-96 overscroll-none scroll-hidden'
-        ref={tRef}>
-        <nav className='h-full  text-black'>
+        className="overflow-y-auto max-h-40 lg:max-h-96 overscroll-none scrollbar-thin scrollbar-thumb-[#B3E0E6]/30"
+        ref={tRef}
+      >
+        <nav className="h-full text-gray-700 space-y-0.5">
           {toc.map(tocItem => {
             const id = uuidToId(tocItem.id)
             tocIds.push(id)
+            const isActive = activeSection === id
+            
             return (
               <a
                 key={id}
                 href={`#${id}`}
-                className={`${activeSection === id && 'dark:border-white border-indigo-800 text-indigo-800 font-bold'} hover:font-semibold border-l pl-4 block hover:text-indigo-800 border-lduration-300 transform dark:text-indigo-400 dark:border-indigo-400
-        notion-table-of-contents-item-indent-level-${tocItem.indentLevel} catalog-item `}>
+                className={`block px-3 py-2 rounded-md transition-all duration-200
+                          ${isActive 
+                            ? 'bg-[#B3E0E6]/10 text-[#2D4B53] font-medium' 
+                            : 'hover:bg-[#F2F8FB] text-gray-600 hover:text-[#B3E0E6]'}`}
+              >
                 <span
                   style={{
                     display: 'inline-block',
-                    marginLeft: tocItem.indentLevel * 16
+                    marginLeft: tocItem.indentLevel * 16 // 保持原有缩进逻辑
                   }}
-                  className={`truncate ${activeSection === id ? ' font-bold text-indigo-800 dark:text-white underline' : ''}`}>
+                  className="truncate"
+                >
                   {tocItem.text}
                 </span>
               </a>

@@ -8,68 +8,61 @@ import { useState } from 'react'
 export function InfoCard(props) {
   const router = useRouter()
   const { className, siteInfo } = props
-  // 存储你的邮箱地址
   const email = "510195171@qq.com"
-  // GitHub地址
   const githubUrl = "https://github.com/mmungdong"
-  // 状态管理邮件显示
   const [showEmail, setShowEmail] = useState(false)
-  
-  // 直接指定头像图片路径（替换为你的实际头像路径）
-  const avatarSrc = "/images/avatar.png" // 例如：public目录下的images文件夹
+  const avatarSrc = "/images/avatar.png"
   
   return (
     <Card
-      className={`relative overflow-hidden rounded-lg
-                  bg-white shadow-md hover:shadow-lg transition-shadow
+      className={`relative overflow-hidden-hidden-hidden rounded-lg:block
+                  bg-white-[#F2F8FB] border border-[#B3E0E6]/20 
+                  rounded-xl shadow                  shadow-sm hover:shadow-md transition-[#B3E0E6]/10 
+                  transition-all duration-300
                   ${className || ''}`}
     >
-      {/* 头像 - 改为直接加载 */}
+      {/* 头像区域 - 增加主题色调强化 */}
       <div
         className="flex justify-center items-center pt-10 pb-6 cursor-pointer"
         onClick={() => router.push('/')}
       >
         <div className="relative">
-          {/* 使用普通img标签替代LazyImage */}
           <img
             src={avatarSrc}
             alt={siteConfig('AUTHOR') || 'Author Avatar'}
             width={100}
             height={100}
-            className="rounded-full object-cover shadow-inner
-                      transition-transform group-hover:scale-110 duration-300"
-            // 可选：添加加载完成和错误处理
-            onLoad={() => console.log('Avatar loaded')}
+            className="rounded-full border-4 border-[#B3E0E6]/30 
+                      object-cover shadow-[0_0_15px_rgba(179,224,230,0.3)]
+                      transition-transform hover:scale-105 duration-300"
             onError={(e) => {
-              // 加载失败时使用默认图片
               e.target.src = "/images/default-avatar.png"
             }}
           />
         </div>
       </div>
 
-      {/* 名称 */}
-      <h2 className='font-medium text-center text-xl pb-4'>
+      {/* 名称 - 深色文字增强对比 */}
+      <h2 className='font-medium text-center text-xl pb-4 text-[#2D4B53]'>
         {siteConfig('AUTHOR')}
       </h2>
 
-      {/* 简介 */}
-      <p className='text-sm text-center'>
+      {/* 简介 - 柔和文字色 */}
+      <p className='text-sm text-center text-gray-600 px-4'>
         {siteConfig('BIO')}
       </p>
 
-      {/* 分割线 */}
-      <hr className="border-gray-200 mx-8 mb-4" />
+      {/* 分割线 - 主题色弱化版 */}
+      <hr className="border-[#B3E0E6]/20 mx-8 my-4" />
 
-      {/* 菜单 / 社交 */}
-      <div className="px-6 py-4 space-y-2">
+      {/* 菜单 / 社交 - 保持布局，优化配色 */}
+      <div className="px-6 py-2 space-y-3">
         <MenuGroupCard {...props} />
         <SocialButton />
       </div>
 
-      
-      {/* 联系方式区域 */}
-      <div className="px-3 mb-2">
+      {/* 联系方式区域 - 主题色交互强化 */}
+      <div className="px-3 mb-6">
         <div className="flex justify-center space-x-6">
           {/* 邮件图标 */}
           <a 
@@ -78,14 +71,13 @@ export function InfoCard(props) {
             onMouseEnter={() => setShowEmail(true)}
             onMouseLeave={() => setShowEmail(false)}
           >
-            <div className="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center 
-                          text-gray-700 hover:bg-blue-50 hover:text-blue-600 
-                          transition-all duration-300">
+            <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center 
+                          text-[#B3E0E6] hover:bg-[#B3E0E6] hover:text-white 
+                          shadow-all duration-300 shadow-sm">
               <i className="fas fa-envelope" />
             </div>
-            {/* 悬停显示邮箱地址 */}
             {showEmail && (
-              <span className="absolute bottom-full mb-2 px-3 py-1 text-xs bg-gray-800 
+              <span className="absolute bottom-full mb-2 px-3 py-1 text-xs bg-[#2D4B53] 
                              text-white rounded whitespace-nowrap z-10
                              animate-fade-in">
                 Mail To {email}
@@ -100,9 +92,9 @@ export function InfoCard(props) {
             rel="noopener noreferrer"
             className="flex flex-col items-center"
           >
-            <div className="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center 
-                          text-gray-700 hover:bg-gray-800 hover:text-white 
-                          transition-all duration-300">
+            <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center 
+                          text-[#B3E0E6] hover:bg-[#B3E0E6] hover:text-white 
+                          transition-all duration-300 shadow-sm">
               <i className="fab fa-github" />
             </div>
           </a>
@@ -111,3 +103,4 @@ export function InfoCard(props) {
     </Card>
   )
 }
+    

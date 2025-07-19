@@ -1,51 +1,94 @@
 import { useGlobal } from '@/lib/global'
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 /**
- * 加密文章校验组件
- * @param {password, validPassword} props
- * @param password 正确的密码
- * @param validPassword(bool) 回调函数，校验正确回调入参为true
- * @returns
+ * 加密文章校验组件 - 修复版
  */
-export const ArticleLock = props => {
-  const { validPassword } = props
+export const ArticleLock = ({ password, validPassword }) => {
   const { locale } = useGlobal()
+  const [inputValue, setInputValue] = useState('')
+  const [error, setError] = useState('')
+  const passwordInputRef = useRef(null)
+
+  // 提交密码校验
   const submitPassword = () => {
-    const p = document.getElementById('password')
-    if (!validPassword(p?.value)) {
-      const tips = document.getElementById('tips')
-      if (tips) {
-        tips.innerHTML = ''
-        tips.innerHTML = `<div class='text-red-500 animate__shakeX animate__animated'>${locale.COMMON.PASSWORD_ERROR}</div>`
+    // 清空之前的错误提示
+    setError('')
+    
+    // 验证密码
+    if (validPassword && !validPassword(inputValue)) {
+      setError(locale.COMMON.PASSWORD_ERROR || '密码错误，请重新输入')
+      // 输入框抖动动画
+      const input = passwordInputRef.current
+      if (input) {
+        input.classList.add('animate-shake')
+        setTimeout(() => input.classList.remove('animate-shake'), 600)
       }
     }
   }
-  const passwordInputRef = useRef(null)
+
+  // 处理键盘回车事件
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      submitPassword()
+    }
+  }
+
+  // 自动聚焦输入框
   useEffect(() => {
-    // 选中密码输入框并将其聚焦
-    passwordInputRef.current.focus()
+    passwordInputRef.current?.focus()
   }, [])
 
-  return <div id='container' className='w-full flex justify-center items-center h-96 '>
-    <div className='text-center space-y-3'>
-      <div className='font-bold dark:text-gray-300 text-black'>{locale.COMMON.ARTICLE_LOCK_TIPS}</div>
-      <div className='flex mx-4'>
-        <input id="password" type='password'
-            onKeyDown={(e) => {
-              if (e.key === 'Enter') {
-                submitPassword()
-              }
-            }}
-            ref={passwordInputRef} // 绑定ref到passwordInputRef变量
-            className='outline-none w-full text-sm pl-5 rounded-l transition focus:shadow-lg  font-light leading-10 bg-gray-100 dark:bg-gray-500'>
-        </input>
-        <div onClick={submitPassword} className="px-3 whitespace-nowrap cursor-pointer items-center justify-center py-2 bg-indigo-500 hover:bg-indigo-400 text-white rounded-r duration-300" >
-          <i className={'duration-200 cursor-pointer fas fa-key'} >&nbsp;{locale.COMMON.SUBMIT}</i>
+  return (
+    <div className="w-full flex justify-center items-center min-h-[300px] p-4 bg-[#F2F8FB]/50">
+      <div className="w-full max-w-md bg-white rounded-xl border border-[#B3E0E6]/30 shadow-sm p-6 transition-all duration-300 hover:shadow-md">
+        {/* 锁图标 */}
+        <div className="text-center mb-5">
+          <div className="inline-flex items-center justify-center w-14 h-14 rounded-full bg-[#F2F8FB] text-[#B3E0E6] mb-4">
+            <i className="fas fa-lock text-2xl"></i>
+          </div>
+          <h3 className="font-medium text-[#2D4B53] text-lg">
+            {locale.COMMON.ARTICLE_LOCK_TIPS || '该文章已加密保护'}
+          </h3>
         </div>
-      </div>
-      <div id='tips'>
+
+        {/* 密码输入框 */}
+        <div className="flex">
+          <input
+            id="password"
+            type="password"
+            value={inputValue}
+            onChange={(e) => setInputValue(e.target.value)}
+            onKeyDown={handleKeyDown}
+            ref={passwordInputRef}
+            placeholder={locale.COMMON.ENTER_PASSWORD || '请输入访问密码'}
+            className="flex-1 px-4 py-3 text-sm 
+                      bg-[#F2F8FB] border border-[#B3E0E6]/30 
+                      text-[#2D4B53] rounded-l-md 
+                      focus:outline-none focus:border-[#B3E0E6] 
+                      focus:ring-1 focus:ring-[#B3E0E6]
+                      transition-all duration-200"
+          />
+          <button
+            onClick={submitPassword}
+            className="px-5 py-3 whitespace-nowrap 
+                      bg-[#B3E0E6] hover:bg-[#8EC1C8] 
+                      text-[#2D4B53] font-medium text-sm
+                      rounded-r-md transition-all duration-200
+                      flex items-center"
+          >
+            <i className="fas fa-key mr-2"></i>
+            {locale.COMMON.SUBMIT || '提交'}
+          </button>
+        </div>
+
+        {/* 错误提示 */}
+        {error && (
+          <div className="mt-3 text-center text-[#E57373] text-sm">
+            {error}
+          </div>
+        )}
       </div>
     </div>
-  </div>
+  )
 }

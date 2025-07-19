@@ -1,116 +1,170 @@
-import Link from 'next/link'
-import { useRouter } from 'next/router'
+import Link from 'next/link';
+import { useRouter } from 'next/router';
 
 /**
- * 数字翻页插件
- * @param page 当前页码
- * @param showNext 是否有下一页
- * @returns {JSX.Element}
- * @constructor
+ * 数字分页组件 - 重构版
+ * 适配主题色调，代码结构清晰，交互体验优化
  */
 const PaginationNumber = ({ page, totalPage }) => {
-  const router = useRouter()
-  const currentPage = +page
-  const showNext = page < totalPage
-  const pagePrefix = router.asPath
-    .split('?')[0]
-    .replace(/\/page\/[1-9]\d*/, '')
-    .replace(/\/$/, '')
-    .replace('.html', '')
-  const pages = generatePages(pagePrefix, page, currentPage, totalPage)
+  const router = useRouter();
+  const currentPage = Number(page);
+  const pagePrefix = getPagePrefix(router.asPath);
 
-  return (
-    <div className='mt-10 mb-5 flex justify-center items-end font-medium text-indigo-400 duration-500 py-3 space-x-2'>
-      {/* 上一页 */}
-      <Link
-        href={{
-          pathname:
-            currentPage === 2
-              ? `${pagePrefix}/`
-              : `${pagePrefix}/page/${currentPage - 1}`,
-          query: router.query.s ? { s: router.query.s } : {}
-        }}
-        rel='prev'
-        className={`${currentPage === 1 ? 'invisible' : 'block'} pb-0.5 hover:bg-indigo-400 hover:text-white w-6 text-center cursor-pointer duration-200 hover:font-bold`}>
-        <i className='fas fa-angle-left' />
-      </Link>
+  // 生成所有页码元素
+  const renderPageItems = () => {
+    const maxVisible = 7; // 最多显示的页码数量
+    const pages = [];
 
-      {pages}
-
-      {/* 下一页 */}
-      <Link
-        href={{
-          pathname: `${pagePrefix}/page/${currentPage + 1}`,
-          query: router.query.s ? { s: router.query.s } : {}
-        }}
-        rel='next'
-        className={`${+showNext ? 'block' : 'invisible'} pb-0.5 hover:bg-indigo-400 hover:text-white w-6 text-center cursor-pointer duration-200 hover:font-bold`}>
-        <i className='fas fa-angle-right' />
-      </Link>
-    </div>
-  )
-}
-
-/**
- * 获取页码
- * @param {*} page
- * @param {*} currentPage
- * @param {*} pagePrefix
- * @returns
- */
-function getPageElement(page, currentPage, pagePrefix) {
-  const selected = page + '' === currentPage + ''
-  return (
-    <Link
-      href={page === 1 ? `${pagePrefix}/` : `${pagePrefix}/page/${page}`}
-      key={page}
-      passHref
-      className={`${
-        selected
-          ? 'font-bold bg-indigo-400 hover:bg-indigo-600 dark:bg-indigo-500 text-white'
-          : 'border-b border-indigo-400 text-indigo-400 hover:border-indigo-400 hover:bg-indigo-400'
+    // 总页数较少时，显示所有页码
+    if (totalPage <= maxVisible) {
+      for (let i = 1; i <= totalPage; i++) {
+        pages.push(renderPageButton(i));
       }
-      duration-500  hover:font-bold hover:text-white
-      cursor-pointer pb-0.5 w-6 text-center
-      `}>
-      {page}
-    </Link>
-  )
-}
+      return pages;
+    }
 
-function generatePages(pagePrefix, page, currentPage, totalPage) {
-  const pages = []
-  const groupCount = 7 // 最多显示页签数
-  if (totalPage <= groupCount) {
-    for (let i = 1; i <= totalPage; i++) {
-      pages.push(getPageElement(i, page, pagePrefix))
+    // 总页数较多时，显示首尾页和当前页附近的页码
+    pages.push(renderPageButton(1));
+    
+    // 计算中间页码范围
+    let startPage = Math.max(2, currentPage - 2);
+    let endPage = Math.min(totalPage - 1, currentPage + 2);
+    
+    // 确保中间显示足够的页码
+    if (endPage - startPage < 3) {
+      startPage = Math.max(2, endPage - 3);
     }
-  } else {
-    pages.push(getPageElement(1, page, pagePrefix))
-    const dynamicGroupCount = groupCount - 2
-    let startPage = currentPage - 2
-    if (startPage <= 1) {
-      startPage = 2
-    }
-    if (startPage + dynamicGroupCount > totalPage) {
-      startPage = totalPage - dynamicGroupCount
-    }
+    
+    // 添加前省略号
     if (startPage > 2) {
-      pages.push(<div key={-1}>... </div>)
+      pages.push(renderEllipsis());
     }
-
-    for (let i = 0; i < dynamicGroupCount; i++) {
-      if (startPage + i < totalPage) {
-        pages.push(getPageElement(startPage + i, page, pagePrefix))
-      }
+    
+    // 添加中间页码
+    for (let i = startPage; i <= endPage; i++) {
+      pages.push(renderPageButton(i));
     }
-
-    if (startPage + dynamicGroupCount < totalPage) {
-      pages.push(<div key={-2}>... </div>)
+    
+    // 添加后省略号
+    if (endPage < totalPage - 1) {
+      pages.push(renderEllipsis());
     }
+    
+    // 添加最后一页
+    pages.push(renderPageButton(totalPage));
 
-    pages.push(getPageElement(totalPage, page, pagePrefix))
+    return pages;
+  };
+
+  // 渲染单个页码按钮
+  const renderPageButton = (pageNum) => {
+    const isActive = pageNum === currentPage;
+    const pageUrl = getPageUrl(pageNum);
+
+    return (
+      <Link
+        key={pageNum}
+        href={pageUrl}
+        className={`w-9 h-9 flex items-center justify-center rounded-md text-sm font-medium transition-all duration-200
+                  ${isActive 
+                    ? 'bg-[#B3E0E6] text-white' 
+                    : 'bg-white border border-[#B3E0E6]/30 text-[#2D4B53] hover:bg-[#B3E0E6]/10'
+                  }`}
+        aria-current={isActive ? 'page' : undefined}
+      >
+        {pageNum}
+      </Link>
+    );
+  };
+
+  // 渲染省略号
+  const renderEllipsis = () => (
+    <span 
+      key="ellipsis" 
+      className="w-9 h-9 flex items-center justify-center text-gray-400"
+    >
+      ...
+    </span>
+  );
+
+  // 渲染上一页按钮
+  const renderPrevButton = () => {
+    const hasPrev = currentPage > 1;
+    const prevPage = currentPage - 1;
+    const prevUrl = getPageUrl(prevPage);
+
+    return (
+      <Link
+        href={prevUrl}
+        rel="prev"
+        className={`w-9 h-9 flex items-center justify-center rounded-md transition-all duration-200
+                  ${hasPrev 
+                    ? 'bg-white border border-[#B3E0E6]/30 text-[#2D4B53] hover:bg-[#B3E0E6]/10' 
+                    : 'opacity-30 cursor-not-allowed bg-[#F2F8FB] border border-gray-200 text-gray-400'
+                  }`}
+        aria-disabled={!hasPrev}
+      >
+        <i className="fas fa-angle-left text-sm" />
+      </Link>
+    );
+  };
+
+  // 渲染下一页按钮
+  const renderNextButton = () => {
+    const hasNext = currentPage < totalPage;
+    const nextPage = currentPage + 1;
+    const nextUrl = getPageUrl(nextPage);
+
+    return (
+      <Link
+        href={nextUrl}
+        rel="next"
+        className={`w-9 h-9 flex items-center justify-center rounded-md transition-all duration-200
+                  ${hasNext 
+                    ? 'bg-white border border-[#B3E0E6]/30 text-[#2D4B53] hover:bg-[#B3E0E6]/10' 
+                    : 'opacity-30 cursor-not-allowed bg-[#F2F8FB] border border-gray-200 text-gray-400'
+                  }`}
+        aria-disabled={!hasNext}
+      >
+        <i className="fas fa-angle-right text-sm" />
+      </Link>
+    );
+  };
+
+  // 获取页面基础路径
+  function getPagePrefix(path) {
+    return path
+      .split('?')[0]
+      .replace(/\/page\/[1-9]\d*/, '')
+      .replace(/\/$/, '')
+      .replace('.html', '');
   }
-  return pages
-}
-export default PaginationNumber
+
+  // 获取页码URL
+  function getPageUrl(pageNum) {
+    const query = router.query.s ? { s: router.query.s } : {};
+    
+    // 第一页特殊处理（无page参数）
+    if (pageNum === 1) {
+      return { pathname: `${pagePrefix}/`, query };
+    }
+    
+    return { 
+      pathname: `${pagePrefix}/page/${pageNum}`, 
+      query 
+    };
+  }
+
+  return (
+    <div className="mt-10 mb-8 flex justify-center">
+      <nav className="inline-flex items-center gap-1.5">
+        {renderPrevButton()}
+        {renderPageItems()}
+        {renderNextButton()}
+      </nav>
+    </div>
+  );
+};
+
+export default PaginationNumber;
+    

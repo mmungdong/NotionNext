@@ -5,7 +5,6 @@ import CONFIG from '../config';
 const ButtonJumpToTop = ({ showPercent = true, percent }) => {
   const { locale } = useGlobal();
 
-  // 控制组件是否启用
   if (!siteConfig('HEXO_WIDGET_TO_TOP', null, CONFIG)) {
     return null;
   }
@@ -13,30 +12,32 @@ const ButtonJumpToTop = ({ showPercent = true, percent }) => {
   return (
     <button
       className="group relative flex items-center justify-center
-                 w-12 h-12 rounded-full bg-blue-500 text-white shadow-lg
-                 hover:bg-blue-600 hover:shadow-xl transition-all duration-300
+                 w-12 h-12 rounded-full bg-white border border-[#B3E0E6]/30 
+                 text-[#2D4B53] shadow-sm
+                 hover:bg-[#B3E0E6] hover:text-white hover:shadow-md 
+                 transition-all duration-300
                  transform hover:scale-110 active:scale-95 focus:outline-none focus:ring-2
-                 focus:ring-blue-300 focus:ring-offset-2"
+                 focus:ring-[#B3E0E6]/50 focus:ring-offset-2"
       onClick={(e) => {
-        // 阻止事件冒泡，避免触发父元素的点击
         e.stopPropagation();
         window.scrollTo({ top: 0, behavior: 'smooth' });
       }}
       title={locale.POST.TOP || '回到顶部'}
       aria-label={locale.POST.TOP || '回到顶部'}
     >
-      {/* 百分比显示 - 默认显示，鼠标悬停时隐藏 */}
+      {/* 优化后的百分比显示 */}
       {showPercent && (
-        <span className="text-sm font-medium transition-opacity duration-300
-                       group-hover:opacity-0 opacity-100">{percent}%</span>
+        <span className="text-base font-semibold transition-opacity duration-300
+                       group-hover:opacity-0 opacity-100 bg-white/80 px-1.5 py-0.5 rounded
+                       shadow-sm">{percent}%</span>
       )}
       
-      {/* 箭头图标 - 鼠标悬停时显示，默认隐藏 */}
+      {/* 箭头图标 */}
       <i className="fas fa-arrow-up text-sm absolute transition-all duration-300
                   group-hover:opacity-100 group-hover:translate-y-[-2px] opacity-0"></i>
       
       {/* 装饰性波纹效果 */}
-      <span className="absolute inset-0 rounded-full border border-blue-300 
+      <span className="absolute inset-0 rounded-full border border-[#B3E0E6]/50
                      animate-ping opacity-75 group-hover:opacity-50 transition-opacity duration-300"></span>
     </button>
   );

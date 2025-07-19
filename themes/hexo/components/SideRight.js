@@ -1,10 +1,7 @@
-import Live2D from '@/components/Live2D'
 import { siteConfig } from '@/lib/config'
 import { useGlobal } from '@/lib/global'
 import dynamic from 'next/dynamic'
 import CONFIG from '../config'
-import { AnalyticsCard } from './AnalyticsCard'
-import Announcement from './Announcement'
 import Card from './Card'
 import Catalog from './Catalog'
 import CategoryGroup from './CategoryGroup'
@@ -65,9 +62,6 @@ export default function SideRight(props) {
         )}
 
         <InfoCard {...props} />
-        {siteConfig('HEXO_WIDGET_ANALYTICS', null, CONFIG) && (
-          <AnalyticsCard {...props} />
-        )}
 
         {showCategory && (
           <Card>
@@ -93,14 +87,11 @@ export default function SideRight(props) {
             </Card>
           )}
 
-        <Announcement post={notice} />
-
         {siteConfig('COMMENT_WALINE_SERVER_URL') &&
           siteConfig('COMMENT_WALINE_RECENT') && <HexoRecentComments />}
 
         {rightAreaSlot}
         <FaceBookPage />
-        <Live2D />
       </div>
     </div>
   )

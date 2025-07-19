@@ -17,8 +17,7 @@ import TagGroups from './TagGroups'
 let windowTop = 0
 
 /**
- * 顶部导航 - 护眼色调版本
- * 采用柔和的绿色系作为主色调，减少视觉疲劳
+ * 顶部导航 - 与主题色#B3E0E6协调的版本
  */
 const Header = props => {
   const searchDrawer = useRef()
@@ -57,25 +56,25 @@ const Header = props => {
       const header = document.querySelector('#header')
       // 导航栏和头图是否重叠
       const scrollInHeader =
-        header && (scrollS < 10 || scrollS < header?.clientHeight - 50) // 透明导航条的条件
+        header && (scrollS < 10 || scrollS < header?.clientHeight - 50)
 
       if (scrollInHeader) {
         // 头图区域 - 透明样式
-        nav && nav.classList.replace('bg-eyecare-50', 'bg-transparent')
-        nav && nav.classList.replace('border-eyecare-200', 'border-transparent')
+        nav && nav.classList.replace('bg-[#F2F8FB]', 'bg-transparent')
+        nav && nav.classList.replace('border-[#B3E0E6]/30', 'border-transparent')
         nav && nav.classList.replace('shadow-md', 'shadow-none')
-        nav && nav.classList.replace('text-gray-800', 'text-white')
-        nav && nav.classList.replace('dark:bg-eyecare-dark', 'dark:bg-transparent')
+        nav && nav.classList.replace('text-[#2D4B53]', 'text-white')
+        nav && nav.classList.replace('dark:bg-gray-800/90', 'dark:bg-transparent')
       } else {
-        // 内容区域 - 护眼背景样式
-        nav && nav.classList.replace('bg-transparent', 'bg-eyecare-50')
-        nav && nav.classList.replace('border-transparent', 'border-eyecare-200')
+        // 内容区域 - 主题背景样式
+        nav && nav.classList.replace('bg-transparent', 'bg-[#F2F8FB]')
+        nav && nav.classList.replace('border-transparent', 'border-[#B3E0E6]/30')
         nav && nav.classList.replace('shadow-none', 'shadow-md')
-        nav && nav.classList.replace('text-white', 'text-gray-800')
-        nav && nav.classList.replace('dark:bg-transparent', 'dark:bg-eyecare-dark')
+        nav && nav.classList.replace('text-white', 'text-[#2D4B53]')
+        nav && nav.classList.replace('dark:bg-transparent', 'dark:bg-gray-800/90')
       }
 
-      // 导航栏不在头图里，且页面向下滚动一定程度 隐藏导航栏
+      // 导航栏显示/隐藏逻辑
       const showNav =
         scrollS <= windowTop ||
         scrollS < 5 ||
@@ -93,16 +92,16 @@ const Header = props => {
   const searchDrawerSlot = (
     <>
       {categories && (
-        <section className='mt-8 p-4 bg-white/80 dark:bg-gray-800/80 rounded-lg shadow-sm'>
+        <section className='mt-8 p-4 bg-white/80 dark:bg-gray-800/80 rounded-lg shadow-sm border border-[#B3E0E6]/20'>
           <div className='text-sm flex flex-nowrap justify-between font-light px-2'>
-            <div className='text-gray-700 dark:text-gray-300'>
-              <i className='mr-2 fas fa-th-list' />
+            <div className='text-[#2D4B53] dark:text-gray-300'>
+              <i className='mr-2 fas fa-th-list text-[#B3E0E6]' />
               {locale.COMMON.CATEGORY}
             </div>
             <Link
               href={'/category'}
               passHref
-              className='mb-3 text-eyecare-600 hover:text-eyecare-700 dark:text-eyecare-400 dark:hover:text-eyecare-300 hover:underline cursor-pointer transition-colors'>
+              className='mb-3 text-[#B3E0E6] hover:text-[#8EC1C8] dark:text-[#B3E0E6] dark:hover:text-[#8EC1C8] hover:underline cursor-pointer transition-colors'>
               {locale.COMMON.MORE} <i className='fas fa-angle-double-right' />
             </Link>
           </div>
@@ -114,16 +113,16 @@ const Header = props => {
       )}
 
       {tags && (
-        <section className='mt-4 p-4 bg-white/80 dark:bg-gray-800/80 rounded-lg shadow-sm'>
+        <section className='mt-4 p-4 bg-white/80 dark:bg-gray-800/80 rounded-lg shadow-sm border border-[#B3E0E6]/20'>
           <div className='text-sm py-2 px-2 flex flex-nowrap justify-between font-light dark:text-gray-300'>
-            <div className='text-gray-700 dark:text-gray-300'>
-              <i className='mr-2 fas fa-tag' />
+            <div className='text-[#2D4B53] dark:text-gray-300'>
+              <i className='mr-2 fas fa-tag text-[#B3E0E6]' />
               {locale.COMMON.TAGS}
             </div>
             <Link
               href={'/tag'}
               passHref
-              className='text-eyecare-600 hover:text-eyecare-700 dark:text-eyecare-400 dark:hover:text-eyecare-300 hover:underline cursor-pointer transition-colors'>
+              className='text-[#B3E0E6] hover:text-[#8EC1C8] dark:text-[#B3E0E6] dark:hover:text-[#8EC1C8] hover:underline cursor-pointer transition-colors'>
               {locale.COMMON.MORE} <i className='fas fa-angle-double-right' />
             </Link>
           </div>
@@ -139,7 +138,7 @@ const Header = props => {
     <div id='top-nav' className='z-40'>
       <SearchDrawer cRef={searchDrawer} slot={searchDrawerSlot} />
 
-      {/* 导航栏 - 护眼色调设计 */}
+      {/* 导航栏 - 主题色设计 */}
       <div
         id='sticky-nav'
         style={{ backdropFilter: 'blur(8px)' }}
@@ -163,7 +162,7 @@ const Header = props => {
             {showSearchButton && (
               <SearchButton 
                 className="w-10 h-10 rounded-full flex items-center justify-center
-                          hover:bg-eyecare-100/50 dark:hover:bg-gray-700/50
+                          hover:bg-[#B3E0E6]/20 dark:hover:bg-gray-700/50
                           transition-colors"
               />
             )}

@@ -14,7 +14,6 @@ import { ArticleLock } from './components/ArticleLock'
 import BlogPostArchive from './components/BlogPostArchive'
 import BlogPostListPage from './components/BlogPostListPage'
 import BlogPostListScroll from './components/BlogPostListScroll'
-import ButtonJumpToComment from './components/ButtonJumpToComment'
 import Card from './components/Card'
 import Footer from './components/Footer'
 import Header from './components/Header'
@@ -72,7 +71,6 @@ const LayoutBase = props => {
           />
         </div>
       )}
-      {post && <ButtonJumpToComment />}
     </>
   )
 
@@ -309,16 +307,6 @@ const LayoutSlug = props => {
                 />
               )}
             </article>
-
-            {/* 评论区 - 修改样式 */}
-            <div className='pt-6 border-t border-gray-100 dark:border-gray-800'>
-              <div className='duration-200 overflow-x-auto bg-white dark:bg-gray-900 px-3'>
-                <Comment 
-                  frontMatter={post} 
-                  className="border rounded-lg p-4 bg-[#F2F8FB]/50"
-                />
-              </div>
-            </div>
           </div>
         )}
       </div>
@@ -368,26 +356,34 @@ const Layout404 = props => {
 const LayoutCategoryIndex = props => {
   const { categoryOptions } = props
   const { locale } = useGlobal()
+  
   return (
     <div className='mt-8'>
-      <Card className='w-full min-h-screen bg-white border border-gray-100 shadow-sm'>
-        <div className='dark:text-gray-200 mb-5 mx-3 flex items-center'>
-          <i className='mr-4 fas fa-th text-[#B3E0E6]' /> {/* 图标样式 */}
-          <span>{locale.COMMON.CATEGORY}:</span>
+      <Card className='w-full bg-white border border-gray-100 shadow-sm'>
+        <div className='dark:text-gray-200 mb-5 ml-4 flex flex items-center'>
+          <i className='mr-4 fas fa-th text-[#B3E0E6]' /> {/* 图标样式保持一致 */}
+          <span className="font-bold text-gray-800 dark:text-gray-100">{locale.COMMON.CATEGORY}</span>
         </div>
-        <div id='category-list' className='duration-200 flex flex-wrap mx-8 gap-3'>
+        <div id='category-list' className='duration-200 flex flex-wrap ml-8 gap-2.5 p-2'>
           {categoryOptions?.map(category => (
             <Link
               key={category.name}
               href={`/category/${category.name}`}
               passHref
-              legacylegacyBehavior>
+              legacyBehavior
+            >
               <div
-                className='duration-300 dark:hover:text-white px-5 py-2.5 rounded-lg cursor-pointer hover:bg-[#B3E0E6]/10 hover:text-[#2D4B53] transition-colors'
+                className='p-2'
               >
-                <i className='mr-2 fas fa-folder text-[#B3E0E6]' />
-                <span>{category.name}</span>
-                <span className='ml-2 text-sm bg-gray-100 px-2 py-0.5 rounded-full'>{category.count}</span>
+                <div 
+                  className=" transition-colors 
+                            px-5 py-2.5 rounded-lg cursor-pointer
+                            inline-flex items-center"
+                >
+                  <i className='mr-2 fas fa-folder text-[#B3E0E6]' />
+                  <span>{category.name}</span>
+                  <span className='ml-2 text-sm bg-gray-100 px-2 py-0.5 rounded-full'>{category.count}</span>
+                </div>
               </div>
             </Link>
           ))}
@@ -396,6 +392,7 @@ const LayoutCategoryIndex = props => {
     </div>
   )
 }
+    
 
 /**
  * 标签列表布局 - 仅修改样式
@@ -408,7 +405,7 @@ const LayoutTagIndex = props => {
       <Card className='w-full bg-white border border border-gray-100 shadow-sm'>
         <div className='dark:text-gray-200 mb-5 ml-4 flex items-center'>
           <i className='mr-4 fas fa-tag text-[#B3E0E6]' /> {/* 图标样式 */}
-          <span>{locale.COMMON.TAGS}:</span>
+          <span className="font-bold text-gray-800 dark:text-gray-100">{locale.COMMON.TAGS}</span>
         </div>
         <div id='tags-list' className='duration-200 flex flex-wrap ml-8 gap-2.5 p-2'>
           {tagOptions.map(tag => (

@@ -1,70 +1,76 @@
-import { useGlobal } from '@/lib/global'
-import Link from 'next/link'
-import { useEffect, useRef } from 'react'
-import Card from './Card'
-import SearchInput from './SearchInput'
-import TagItemMini from './TagItemMini'
+import { useGlobal } from '@/lib/global';
+import Link from 'next/link';
+import { useEffect, useRef } from 'react';
+import Card from './Card';
+import SearchInput from './SearchInput';
+import TagItemMini from './TagItemMini';
 
 /**
- * 搜索页面的导航
- * @param {*} props
- * @returns
+ * 搜索页面导航组件 - 适配主题色调
  */
-export default function SearchNav(props) {
-  const { tagOptions, categoryOptions } = props
-  const cRef = useRef(null)
-  const { locale } = useGlobal()
-  useEffect(() => {
-    // 自动聚焦到搜索框
-    cRef?.current?.focus()
-  }, [])
+export default function SearchNav({ tagOptions, categoryOptions, ...props }) {
+  const searchRef = useRef(null);
+  const { locale } = useGlobal();
 
-  return <>
+  // 自动聚焦到搜索框
+  useEffect(() => {
+    searchRef?.current?.focus();
+  }, []);
+
+  return (
     <div className="my-6 px-2">
-        <SearchInput cRef={cRef} {...props} />
-        {/* 分类 */}
-        <Card className="w-full mt-4">
-            <div className="dark:text-gray-200 mb-5 mx-3">
-                <i className="mr-4 fas fa-th" />
-                {locale.COMMON.CATEGORY}:
-            </div>
-            <div id="category-list" className="duration-200 flex flex-wrap mx-8">
-                {categoryOptions?.map(category => {
-                  return (
-                      <Link
-                          key={category.name}
-                          href={`/category/${category.name}`}
-                          passHref
-                          legacyBehavior>
-                          <div
-                              className={
-                                  ' duration-300 dark:hover:text-white rounded-lg px-5 cursor-pointer py-2 hover:bg-indigo-400 hover:text-white'
-                              }
-                          >
-                              <i className="mr-4 fas fa-folder" />
-                              {category.name}({category.count})
-                          </div>
-                      </Link>
-                  )
-                })}
-            </div>
-        </Card>
-        {/* 标签 */}
-        <Card className="w-full mt-4">
-            <div className="dark:text-gray-200 mb-5 ml-4">
-                <i className="mr-4 fas fa-tag" />
-                {locale.COMMON.TAGS}:
-            </div>
-            <div id="tags-list" className="duration-200 flex flex-wrap ml-8">
-                {tagOptions?.map(tag => {
-                  return (
-                        <div key={tag.name} className="p-2">
-                            <TagItemMini key={tag.name} tag={tag} />
-                        </div>
-                  )
-                })}
-            </div>
-        </Card>
+      {/* 搜索输入框 */}
+      <SearchInput 
+        cRef={searchRef} 
+        {...props} 
+        className="border-[#B3E0E6]/30 focus:border-[#B3E0E6] focus:ring-[#B3E0E6]/20"
+      />
+
+      {/* 分类区域 */}
+      <Card className="w-full mt-4 border-[#B3E0E6]/20">
+        <div className="text-[#2D4B53] mb-4 mx-3 flex items-center">
+          <i className="mr-2 fas fa-th text-[#B3E0E6]" />
+          {locale.COMMON.CATEGORY}:
+        </div>
+        <div id="category-list" className="duration-200 flex flex-wrap gap-2 mx-4 pb-2">
+          {categoryOptions?.map(category => (
+            <Link
+              key={category.name}
+              href={`/category/${category.name}`}
+              passHref
+              legacyBehavior
+            >
+              <div
+                className="rounded-lg px-3 py-1.5 text-sm cursor-pointer transition-all duration-300
+                          bg-[#F2F8FB] text-[#2D4B53] border border-[#B3E0E6]/20
+                          hover:bg-[#B3E0E6] hover:text-white"
+              >
+                <i className="mr-1.5 fas fa-folder text-[#B3E0E6]" />
+                {category.name}
+                <span className="ml-1 opacity-80">({category.count})</span>
+              </div>
+            </Link>
+          ))}
+        </div>
+      </Card>
+
+      {/* 标签区域 */}
+      <Card className="w-full mt-4 border-[#B3E0E6]/20">
+        <div className="text-[#2D4B53] mb-4 ml-4 flex items-center">
+          <i className="mr-2 fas fa-tag text-[#B3E0E6]" />
+          {locale.COMMON.TAGS}:
+        </div>
+        <div id="tags-list" className="duration-200 flex flex-wrap gap-1.5 mx-4 pb-3">
+          {tagOptions?.map(tag => (
+            <TagItemMini 
+              key={tag.name} 
+              tag={tag} 
+              className="border-[#B3E0E6]/20"
+            />
+          ))}
+        </div>
+      </Card>
     </div>
-</>
+  );
 }
+    
