@@ -48,7 +48,6 @@ const MenuGroupCard = props => {
           return (
             <Link
               key={`${link.href}`}
-              title={link.href}
               href={link.href}
               target={link?.target}
               className={

@@ -5,7 +5,6 @@ import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import CONFIG from '../config'
-import ButtonRandomPost from './ButtonRandomPost'
 import CategoryGroup from './CategoryGroup'
 import Logo from './Logo'
 import { MenuListTop } from './MenuListTop'
@@ -174,7 +173,6 @@ const Header = props => {
               )}
             </div>
             {showSearchButton && <SearchButton />}
-            {showRandomButton && <ButtonRandomPost {...props} />}
           </div>
         </div>
       </div>

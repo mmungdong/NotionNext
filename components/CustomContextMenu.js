@@ -187,15 +187,6 @@ export default function CustomContextMenu(props) {
 
         {/* 跳转导航按钮 */}
         <div className='w-full px-2'>
-          {CUSTOM_RIGHT_CLICK_CONTEXT_MENU_RANDOM_POST && (
-            <div
-              onClick={handleJumpToRandomPost}
-              title={locale.MENU.WALK_AROUND}
-              className='w-full px-2 h-10 flex justify-start items-center flex-nowrap cursor-pointer hover:bg-blue-600 hover:text-white rounded-lg duration-200 transition-all'>
-              <i className='fa-solid fa-podcast mr-2' />
-              <div className='whitespace-nowrap'>{locale.MENU.WALK_AROUND}</div>
-            </div>
-          )}
 
           {CUSTOM_RIGHT_CLICK_CONTEXT_MENU_CATEGORY && (
             <Link

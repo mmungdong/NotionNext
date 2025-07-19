@@ -1,25 +1,45 @@
-import { siteConfig } from '@/lib/config'
-import { useGlobal } from '@/lib/global'
-import CONFIG from '../config'
+import { useGlobal } from '@/lib/global';
+import { siteConfig } from '@/lib/config';
+import CONFIG from '../config';
 
-/**
- * 跳转到网页顶部
- * 当屏幕下滑500像素后会出现该控件
- * @param targetRef 关联高度的目标html标签
- * @param showPercent 是否显示百分比
- * @returns {JSX.Element}
- * @constructor
- */
 const ButtonJumpToTop = ({ showPercent = true, percent }) => {
-  const { locale } = useGlobal()
+  const { locale } = useGlobal();
 
+  // 控制组件是否启用
   if (!siteConfig('HEXO_WIDGET_TO_TOP', null, CONFIG)) {
-    return <></>
+    return null;
   }
-  return (<div className='space-x-1 items-center justify-center transform hover:scale-105 duration-200 w-7 h-auto pb-1 text-center' onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} >
-        <div title={locale.POST.TOP} ><i className='fas fa-arrow-up text-xs' /></div>
-        {showPercent && (<div className='text-xs hidden lg:block'>{percent}</div>)}
-    </div>)
-}
 
-export default ButtonJumpToTop
+  return (
+    <button
+      className="group relative flex items-center justify-center
+                 w-12 h-12 rounded-full bg-blue-500 text-white shadow-lg
+                 hover:bg-blue-600 hover:shadow-xl transition-all duration-300
+                 transform hover:scale-110 active:scale-95 focus:outline-none focus:ring-2
+                 focus:ring-blue-300 focus:ring-offset-2"
+      onClick={(e) => {
+        // 阻止事件冒泡，避免触发父元素的点击
+        e.stopPropagation();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }}
+      title={locale.POST.TOP || '回到顶部'}
+      aria-label={locale.POST.TOP || '回到顶部'}
+    >
+      {/* 百分比显示 - 默认显示，鼠标悬停时隐藏 */}
+      {showPercent && (
+        <span className="text-sm font-medium transition-opacity duration-300
+                       group-hover:opacity-0 opacity-100">{percent}%</span>
+      )}
+      
+      {/* 箭头图标 - 鼠标悬停时显示，默认隐藏 */}
+      <i className="fas fa-arrow-up text-sm absolute transition-all duration-300
+                  group-hover:opacity-100 group-hover:translate-y-[-2px] opacity-0"></i>
+      
+      {/* 装饰性波纹效果 */}
+      <span className="absolute inset-0 rounded-full border border-blue-300 
+                     animate-ping opacity-75 group-hover:opacity-50 transition-opacity duration-300"></span>
+    </button>
+  );
+};
+
+export default ButtonJumpToTop;

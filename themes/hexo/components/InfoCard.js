@@ -5,29 +5,51 @@ import MenuGroupCard from './MenuGroupCard'
 import LazyImage from '@/components/LazyImage'
 import { siteConfig } from '@/lib/config'
 
-/**
- * 社交信息卡
- * @param {*} props
- * @returns
- */
 export function InfoCard(props) {
-  const { className, siteInfo } = props
   const router = useRouter()
+  const { className, siteInfo } = props
+
   return (
-        <Card className={className}>
-            <div
-                className='justify-center items-center flex py-6 dark:text-gray-100  transform duration-200 cursor-pointer'
-                onClick={() => {
-                  router.push('/')
-                }}
-            >
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <LazyImage src={siteInfo?.icon} className='rounded-full' width={120} alt={siteConfig('AUTHOR')} />
-            </div>
-            <div className='font-medium text-center text-xl pb-4'>{siteConfig('AUTHOR')}</div>
-            <div className='text-sm text-center'>{siteConfig('BIO')}</div>
-            <MenuGroupCard {...props} />
-            <SocialButton />
-        </Card>
+    <Card
+      className={`relative overflow-hidden rounded-lg
+                  bg-white shadow-md hover:shadow-lg transition-shadow
+                  ${className || ''}`}
+    >
+      {/* 头像 */}
+      <div
+        className="flex justify-center items-center pt-10 pb-6 cursor-pointer"
+        onClick={() => router.push('/')}
+      >
+        <div className="relative">
+          <LazyImage
+            src={siteInfo?.icon}
+            alt={siteConfig('AUTHOR')}
+            width={100}
+            height={100}
+            className="rounded-full object-cover shadow-inner
+                      transition-transform group-hover:scale-110 duration-300"
+          />
+        </div>
+      </div>
+
+      {/* 名称 */}
+      <h2 className='font-medium text-center text-xl pb-4'>
+        {siteConfig('AUTHOR')}
+      </h2>
+
+      {/* 简介 */}
+      <p className='text-sm text-center'>
+        {siteConfig('BIO')}
+      </p>
+
+      {/* 分割线 */}
+      <hr className="border-gray-200 mx-8 mb-4" />
+
+      {/* 菜单 / 社交 */}
+      <div className="px-6 py-4 space-y-4">
+        <MenuGroupCard {...props} />
+        <SocialButton />
+      </div>
+    </Card>
   )
 }
