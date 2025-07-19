@@ -17,9 +17,8 @@ import TagGroups from './TagGroups'
 let windowTop = 0
 
 /**
- * 顶部导航
- * @param {*} param0
- * @returns
+ * 顶部导航 - 护眼色调版本
+ * 采用柔和的绿色系作为主色调，减少视觉疲劳
  */
 const Header = props => {
   const searchDrawer = useRef()
@@ -28,7 +27,6 @@ const Header = props => {
   const router = useRouter()
   const [isOpen, changeShow] = useState(false)
   const showSearchButton = siteConfig('HEXO_MENU_SEARCH', false, CONFIG)
-  const showRandomButton = siteConfig('HEXO_MENU_RANDOM', false, CONFIG)
 
   const toggleMenuOpen = () => {
     changeShow(!isOpen)
@@ -61,24 +59,20 @@ const Header = props => {
       const scrollInHeader =
         header && (scrollS < 10 || scrollS < header?.clientHeight - 50) // 透明导航条的条件
 
-      // const textWhite = header && scrollInHeader
-
       if (scrollInHeader) {
-        nav && nav.classList.replace('bg-white', 'bg-none')
-        nav && nav.classList.replace('border', 'border-transparent')
-        nav && nav.classList.replace('drop-shadow-md', 'shadow-none')
-        nav && nav.classList.replace('dark:bg-hexo-black-gray', 'transparent')
+        // 头图区域 - 透明样式
+        nav && nav.classList.replace('bg-eyecare-50', 'bg-transparent')
+        nav && nav.classList.replace('border-eyecare-200', 'border-transparent')
+        nav && nav.classList.replace('shadow-md', 'shadow-none')
+        nav && nav.classList.replace('text-gray-800', 'text-white')
+        nav && nav.classList.replace('dark:bg-eyecare-dark', 'dark:bg-transparent')
       } else {
-        nav && nav.classList.replace('bg-none', 'bg-white')
-        nav && nav.classList.replace('border-transparent', 'border')
-        nav && nav.classList.replace('shadow-none', 'drop-shadow-md')
-        nav && nav.classList.replace('transparent', 'dark:bg-hexo-black-gray')
-      }
-
-      if (scrollInHeader) {
-        nav && nav.classList.replace('text-black', 'text-white')
-      } else {
-        nav && nav.classList.replace('text-white', 'text-black')
+        // 内容区域 - 护眼背景样式
+        nav && nav.classList.replace('bg-transparent', 'bg-eyecare-50')
+        nav && nav.classList.replace('border-transparent', 'border-eyecare-200')
+        nav && nav.classList.replace('shadow-none', 'shadow-md')
+        nav && nav.classList.replace('text-white', 'text-gray-800')
+        nav && nav.classList.replace('dark:bg-transparent', 'dark:bg-eyecare-dark')
       }
 
       // 导航栏不在头图里，且页面向下滚动一定程度 隐藏导航栏
@@ -99,16 +93,16 @@ const Header = props => {
   const searchDrawerSlot = (
     <>
       {categories && (
-        <section className='mt-8'>
+        <section className='mt-8 p-4 bg-white/80 dark:bg-gray-800/80 rounded-lg shadow-sm'>
           <div className='text-sm flex flex-nowrap justify-between font-light px-2'>
-            <div className='text-gray-600 dark:text-gray-200'>
+            <div className='text-gray-700 dark:text-gray-300'>
               <i className='mr-2 fas fa-th-list' />
               {locale.COMMON.CATEGORY}
             </div>
             <Link
               href={'/category'}
               passHref
-              className='mb-3 text-gray-400 hover:text-black dark:text-gray-400 dark:hover:text-white hover:underline cursor-pointer'>
+              className='mb-3 text-eyecare-600 hover:text-eyecare-700 dark:text-eyecare-400 dark:hover:text-eyecare-300 hover:underline cursor-pointer transition-colors'>
               {locale.COMMON.MORE} <i className='fas fa-angle-double-right' />
             </Link>
           </div>
@@ -120,16 +114,16 @@ const Header = props => {
       )}
 
       {tags && (
-        <section className='mt-4'>
-          <div className='text-sm py-2 px-2 flex flex-nowrap justify-between font-light dark:text-gray-200'>
-            <div className='text-gray-600 dark:text-gray-200'>
+        <section className='mt-4 p-4 bg-white/80 dark:bg-gray-800/80 rounded-lg shadow-sm'>
+          <div className='text-sm py-2 px-2 flex flex-nowrap justify-between font-light dark:text-gray-300'>
+            <div className='text-gray-700 dark:text-gray-300'>
               <i className='mr-2 fas fa-tag' />
               {locale.COMMON.TAGS}
             </div>
             <Link
               href={'/tag'}
               passHref
-              className='text-gray-400 hover:text-black  dark:hover:text-white hover:underline cursor-pointer'>
+              className='text-eyecare-600 hover:text-eyecare-700 dark:text-eyecare-400 dark:hover:text-eyecare-300 hover:underline cursor-pointer transition-colors'>
               {locale.COMMON.MORE} <i className='fas fa-angle-double-right' />
             </Link>
           </div>
@@ -145,34 +139,34 @@ const Header = props => {
     <div id='top-nav' className='z-40'>
       <SearchDrawer cRef={searchDrawer} slot={searchDrawerSlot} />
 
-      {/* 导航栏 */}
+      {/* 导航栏 - 护眼色调设计 */}
       <div
         id='sticky-nav'
-        style={{ backdropFilter: 'blur(3px)' }}
-        className={
-          'top-0 duration-300 transition-all  shadow-none fixed bg-none dark:bg-hexo-black-gray dark:text-gray-200 text-black w-full z-20 transform border-transparent dark:border-transparent'
-        }>
-        <div className='w-full flex justify-between items-center px-4 py-2'>
-          <div className='flex'>
+        style={{ backdropFilter: 'blur(8px)' }}
+        className='top-0 duration-500 transition-all shadow-none fixed bg-transparent 
+                  text-white w-full z-20 transform border-transparent 
+                  dark:border-transparent ease-in-out'>
+        <div className='w-full flex justify-between items-center px-4 py-3 md:py-4'>
+          {/* Logo区域 */}
+          <div className='flex items-center'>
             <Logo {...props} />
           </div>
 
-          {/* 右侧功能 */}
-          <div className='mr-1 flex justify-end items-center '>
-            <div className='hidden lg:flex'>
-              {' '}
+          {/* 右侧功能区 */}
+          <div className='mr-1 flex justify-end items-center space-x-1 md:space-x-3'>
+            {/* 桌面端菜单 */}
+            <div className='hidden lg:flex items-center space-x-1 md:space-x-6'>
               <MenuListTop {...props} />
             </div>
-            <div
-              onClick={toggleMenuOpen}
-              className='w-8 justify-center items-center h-8 cursor-pointer flex lg:hidden'>
-              {isOpen ? (
-                <i className='fas fa-times' />
-              ) : (
-                <i className='fas fa-bars' />
-              )}
-            </div>
-            {showSearchButton && <SearchButton />}
+            
+            {/* 搜索按钮 */}
+            {showSearchButton && (
+              <SearchButton 
+                className="w-10 h-10 rounded-full flex items-center justify-center
+                          hover:bg-eyecare-100/50 dark:hover:bg-gray-700/50
+                          transition-colors"
+              />
+            )}
           </div>
         </div>
       </div>
@@ -186,3 +180,4 @@ const Header = props => {
 }
 
 export default Header
+    
