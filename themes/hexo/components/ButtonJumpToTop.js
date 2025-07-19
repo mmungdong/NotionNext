@@ -12,7 +12,7 @@ const ButtonJumpToTop = ({ showPercent = true, percent }) => {
   return (
     <button
       className="group relative flex items-center justify-center
-                 w-12 h-12 rounded-full bg-white border border-[#B3E0E6]/30 
+                 w-16 h-16 rounded-full bg-white border border-[#B3E0E6]/30 
                  text-[#2D4B53] shadow-sm
                  hover:bg-[#B3E0E6] hover:text-white hover:shadow-md 
                  transition-all duration-300
@@ -25,18 +25,20 @@ const ButtonJumpToTop = ({ showPercent = true, percent }) => {
       title={locale.POST.TOP || '回到顶部'}
       aria-label={locale.POST.TOP || '回到顶部'}
     >
-      {/* 优化后的百分比显示 */}
+      {/* 百分比显示 - 确保在按钮内部 */}
       {showPercent && (
-        <span className="text-base font-semibold transition-opacity duration-300
-                       group-hover:opacity-0 opacity-100 bg-white/80 px-1.5 py-0.5 rounded
-                       shadow-sm">{percent}%</span>
+        <div className="text-sm font-semibold absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2
+                       bg-white/80 px-2 py-1 rounded
+                       transition-opacity duration-300 group-hover:opacity-0 opacity-100">
+          {percent}%
+        </div>
       )}
       
-      {/* 箭头图标 */}
-      <i className="fas fa-arrow-up text-sm absolute transition-all duration-300
+      {/* 箭头图标 - 增大尺寸以匹配按钮 */}
+      <i className="fas fa-arrow-up text-lg absolute transition-all duration-300
                   group-hover:opacity-100 group-hover:translate-y-[-2px] opacity-0"></i>
       
-      {/* 装饰性波纹效果 */}
+      {/* 装饰性波纹效果 - 匹配增大后的按钮 */}
       <span className="absolute inset-0 rounded-full border border-[#B3E0E6]/50
                      animate-ping opacity-75 group-hover:opacity-50 transition-opacity duration-300"></span>
     </button>
