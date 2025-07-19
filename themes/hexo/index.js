@@ -232,7 +232,7 @@ const LayoutArchive = props => {
   const { archivePosts } = props
   return (
     <div className='pt-8'>
-      <Card className='w-full bg-white rounded-xl shadow-sm border border-gray-100'> // 卡片样式
+      <Card className='w-full bg-white rounded-xl shadow-sm border border-gray-100'>
         <div className='mb-10 pb-20 md:p-12 p-3 min-h-full dark:bg-gray-900'>
           {Object.keys(archivePosts).map(archiveTitle => (
             <BlogPostArchive
